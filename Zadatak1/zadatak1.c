@@ -11,17 +11,20 @@ int intrCount = 0;
 
 static void alrmHandler(int sigNo) {
     //printf("Timeout!\n");
-    intrCount = 0;
+    if (sigNo == SIGALRM) intrCount = 0;
 } 
 
 static void intrHandler(int sigNo) {
-    signal(SIGALRM, &alrmHandler);
-    ++intrCount;
-    //printf("\n[Counter = %d]\n", intrCount);
-    alarm(1);
-    if (intrCount == 2) {
-        signal(SIGINT, SIG_DFL);
-        kill(getpid(), SIGINT);
+    if (sigNo == SIGINT) {
+        signal(SIGALRM, &alrmHandler);
+        ++intrCount;
+        //printf("\n[Counter = %d]\n", intrCount);
+        alarm(1);
+        if (intrCount == 2) {
+            alarm(0);
+            signal(SIGINT, SIG_DFL);
+            kill(getpid(), SIGINT);
+        }
     }
 }
 
