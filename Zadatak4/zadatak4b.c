@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #define MSGQID 1337
@@ -25,6 +26,8 @@ int main() {
             printf("Received: [%s]\n", buffer.messageConent); 
             fflush(stdout);
         }
+        buffer.messageType = getppid();
+        msgsnd(qid, &buffer, sizeof(buffer.messageConent), 0);
     } while (strcmp(buffer.messageConent, "QUIT") != 0);
     return 0;
 }

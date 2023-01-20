@@ -36,7 +36,11 @@ int main() {
             int inputLength = strlen(buffer.messageContent);
             buffer.messageContent[--inputLength] = '\0';
             if (msgsnd(qid, &buffer, sizeof(buffer.messageContent), 0) == -1) fprintf(stderr, "Could not send the message :(\n");
-            else printf("Sending...\n");
+            else {
+                printf("Sending...\n");
+                fflush(stdout);
+            }
+            if (strcmp(buffer.messageContent, "QUIT") != 0) msgrcv(qid, &buffer, sizeof(buffer.messageContent), getpid(), 0); 
         } while (strcmp(buffer.messageContent, "QUIT") != 0);
         wait(NULL);
         msgctl(qid, IPC_RMID, 0);
