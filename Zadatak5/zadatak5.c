@@ -40,7 +40,7 @@ int main() {
         Message buffer;
         for (int i = 0; i < count; ++i) {
             randomNumbers[i] = (rand() % 99) + 1;
-            printf("#%d Randomly generated number [%d]\n", i, randomNumbers[i]);
+            printf("#%d Randomly generated number [%d]\n", i + 1, randomNumbers[i]);
             sprintf(buffer.messageContent, "%d", randomNumbers[i]);
             if (msgsnd(qid, &buffer, sizeof(buffer.messageContent), 0) == -1) fprintf(stderr, "Could not send the number :(\n");
             else printf("Succesfully sent the number :D\n");
