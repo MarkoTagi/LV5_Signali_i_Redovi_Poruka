@@ -66,29 +66,27 @@ int main() {
                 if ((lineCount % 2) == 0) {
                     strcpy(buffer.messageContent, line);
                     buffer.messageType = 1;
-                    printf("Buffer --> messageType: %ld.\nBuffer --> messageContent: %s\n", buffer.messageType, buffer.messageContent);
-                    int sendStatus = msgsnd(msgqid, &buffer, MAX_LEN, 0);
-                    printf("Was sent: [%d]\n", sendStatus);
+                    //printf("Buffer --> messageType: %ld.\nBuffer --> messageContent: %s\n", buffer.messageType, buffer.messageContent);
+                    if (msgsnd(msgqid, &buffer, MAX_LEN, 0) == -1) fprintf(stderr, "Error! [msgsnd]\n");
+                    //else printf("Sending line...\n");
                 }
                 else {
                     strcpy(buffer.messageContent, line);
                     buffer.messageType = 2;
-                    printf("Buffer --> messageType: %ld.\nBuffer --> messageContent: %s.\n", buffer.messageType, buffer.messageContent);
-                    int sendStatus = msgsnd(msgqid, &buffer, MAX_LEN, 0);
-                    printf("Was sent: [%d]\n", sendStatus);
+                    //printf("Buffer --> messageType: %ld.\nBuffer --> messageContent: %s.\n", buffer.messageType, buffer.messageContent);
+                    if (msgsnd(msgqid, &buffer, MAX_LEN, 0) == -1) fprintf(stderr, "Error! [msgsnd]\n");
+                    //else printf("Sending line...\n", sendStatus);
                 }
                 ++lineCount;
             }
             fclose(filep);
             strcpy(buffer.messageContent, "END");
             buffer.messageType = 1;
-            int sendStatus = msgsnd(msgqid, &buffer, MAX_LEN, 0);
-            printf("Sending termination line...\n");
-            printf("Was sent: [%d]\n", sendStatus);
+            if (msgsnd(msgqid, &buffer, MAX_LEN, 0) == -1) fprintf(stderr, "Error! [msgsnd]\n");
+            //else printf("Sending termination line...\n");
             buffer.messageType = 2;
-            sendStatus = msgsnd(msgqid, &buffer, MAX_LEN, 0);
-            printf("Sending termination line...\n");
-            printf("Was sent: [%d]\n", sendStatus);
+            if (msgsnd(msgqid, &buffer, MAX_LEN, 0) == -1) fprintf(stderr, "Error! [msgsnd]\n");
+            //else printf("Sending termination line...\n");
             wait(NULL);
             wait(NULL);
             msgctl(msgqid, IPC_RMID, 0);
